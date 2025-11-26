@@ -51,3 +51,71 @@
   background: #f44336;
   box-shadow: 0 0 8px #f44336;
 }
+
+.ollama-warning {
+  background: #fff3cd;
+  border: 2px solid #ffc107;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+  display: flex;
+  gap: 12px;
+  color: #856404;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.warning-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.warning-content {
+  flex: 1;
+}
+
+.warning-content strong {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: #664d03;
+}
+
+.warning-content p {
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+.warning-content ul {
+  margin: 8px 0;
+  padding-left: 20px;
+  font-size: 14px;
+}
+
+.warning-content li {
+  margin: 4px 0;
+}
+
+.warning-content code {
+  background: rgba(0, 0, 0, 0.1);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+}
+
+.warning-content a {
+  color: #0066cc;
+  text-decoration: underline;
+  font-weight: 500;
+}

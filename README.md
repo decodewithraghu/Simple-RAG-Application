@@ -40,8 +40,11 @@ Before you begin, ensure you have the following installed:
 
 ### 1. Install Ollama
 
+### 1. Install Ollama
+
+#### macOS
 ```bash
-# macOS
+# Install via Homebrew
 brew install ollama
 
 # Start Ollama service
@@ -51,7 +54,39 @@ ollama serve
 ollama pull llama2
 ```
 
+#### Windows
+1. Download Ollama installer from [https://ollama.ai/download](https://ollama.ai/download)
+2. Run `OllamaSetup.exe` and follow the installation wizard
+3. Ollama will automatically start as a Windows service
+4. Open PowerShell or Command Prompt and pull a model:
+```powershell
+ollama pull llama2
+```
+
+#### Linux
+```bash
+# Install via curl
+curl -fsSL https://ollama.ai/install.sh | sh
+
+# Start Ollama service
+ollama serve
+
+# Pull a model (in a new terminal)
+ollama pull llama2
+```
+
+**Verify Installation** (All Platforms):
+```bash
+# Check if Ollama is running
+ollama list
+
+# Test with a simple prompt
+ollama run llama2 "Hello, how are you?"
+```
+
 ### 2. Backend Setup
+
+#### macOS/Linux
 
 ```bash
 # Navigate to backend directory
@@ -61,9 +96,7 @@ cd backend
 python3 -m venv venv
 
 # Activate virtual environment
-source venv/bin/activate  # On macOS/Linux
-# or
-venv\Scripts\activate  # On Windows
+source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
@@ -73,6 +106,29 @@ cp .env.example .env
 
 # Edit .env if needed (optional)
 # The default settings should work fine
+```
+
+#### Windows
+
+**Note**: Windows Long Path support is required for PyTorch installation.
+
+**Option 1 - Enable Long Paths (Recommended)**:
+1. Open PowerShell as Administrator
+2. Run: `New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force`
+3. Restart your terminal
+
+**Option 2 - Use Shorter Path**:
+```powershell
+# Create virtual environment in shorter path
+cd C:\
+mkdir rag
+cd rag
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+
+# Navigate to backend and install dependencies
+cd C:\path\to\Simple-RAG-Application\backend
+pip install -r requirements.txt
 ```
 
 ### 3. Frontend Setup
@@ -91,9 +147,16 @@ npm install
 
 The easiest way to start both backend and frontend:
 
+#### macOS/Linux
 ```bash
 # From the project root directory
 ./start-all.sh
+```
+
+#### Windows
+```powershell
+# From the project root directory
+.\start-all.bat
 ```
 
 This script will:
@@ -105,7 +168,7 @@ This script will:
 - ✅ Open the application in your browser
 - ✅ Display process IDs and log locations
 
-To stop the application, press `Ctrl+C` in the terminal.
+To stop the application, press `Ctrl+C` (macOS/Linux) or any key (Windows) in the terminal.
 
 ### Manual Start
 
@@ -185,7 +248,8 @@ The frontend will start at `http://localhost:3000`
 
 ```
 Rag/
-├── start-all.sh            # Main startup script
+├── start-all.sh            # Main startup script (macOS/Linux)
+├── start-all.bat           # Main startup script (Windows)
 ├── README.md
 ├── PWA_GUIDE.md           # PWA implementation details
 ├── IMPLEMENTATION_SUMMARY.md
@@ -369,14 +433,36 @@ Organize documents into collections for:
 ## 🚨 Troubleshooting
 
 ### Application won't start
-- Run `./start-all.sh` from the project root
-- Check logs at `/tmp/rag-backend.log` and `/tmp/rag-frontend.log`
+- **macOS/Linux**: Run `./start-all.sh` from the project root
+- **Windows**: Run `.\start-all.bat` from the project root
+- Check logs:
+  - **macOS/Linux**: `/tmp/rag-backend.log` and `/tmp/rag-frontend.log`
+  - **Windows**: `backend\backend.log` and `frontend\frontend.log`
 - Ensure ports 8000 and 3000 are available
 
 ### Ollama not available
-- Make sure Ollama is running: `ollama serve`
-- Check if the model is pulled: `ollama list`
-- Pull the model if missing: `ollama pull llama2`
+**Check if Ollama is running:**
+- **macOS/Linux**: Run `ollama serve` in a terminal
+- **Windows**: Ollama runs automatically as a service after installation
+  - If not running, search for "Ollama" in Windows Start menu and launch it
+  - Or restart the Ollama service from Windows Services
+
+**Verify Ollama installation:**
+```bash
+# Check available models
+ollama list
+
+# Pull the model if missing
+ollama pull llama2
+
+# Test Ollama
+ollama run llama2 "test"
+```
+
+**Windows-specific issues:**
+- If `ollama` command not found, restart your terminal after installation
+- Check if Ollama service is running: Open Task Manager > Services tab > Look for "Ollama"
+- Reinstall from [https://ollama.ai/download](https://ollama.ai/download) if needed
 
 ### Dependencies missing
 - Backend: `pip install -r backend/requirements.txt`
@@ -384,9 +470,12 @@ Organize documents into collections for:
 - Or use `./start-all.sh` which installs automatically
 
 ### Backend errors
-- Check Python version: `python3 --version` (requires 3.8+)
+- Check Python version: `python3 --version` (macOS/Linux) or `python --version` (Windows) - requires 3.8+
 - Verify .env file exists in backend directory
-- Check `/tmp/rag-backend.log` for detailed errors
+- Check backend logs:
+  - **macOS/Linux**: `/tmp/rag-backend.log`
+  - **Windows**: `backend\backend.log`
+- **Windows**: If PyTorch installation fails, see [Backend Setup for Windows](#windows)
 
 ### Frontend can't connect to backend
 - Ensure backend is running on port 8000
@@ -429,6 +518,7 @@ Organize documents into collections for:
 
 ## 🚀 Quick Commands
 
+### macOS/Linux
 ```bash
 # Start everything
 ./start-all.sh
@@ -444,6 +534,28 @@ tail -f /tmp/rag-frontend.log
 
 # Test backend API
 curl http://localhost:8000/health
+
+# Test Ollama
+ollama list
+ollama run llama2
+```
+
+### Windows
+```powershell
+# Start everything
+.\start-all.bat
+
+# Stop everything (from start-all.bat window)
+# Press any key
+
+# View backend logs
+Get-Content backend\backend.log -Wait
+
+# View frontend logs
+Get-Content frontend\frontend.log -Wait
+
+# Test backend API
+Invoke-WebRequest http://localhost:8000/health
 
 # Test Ollama
 ollama list

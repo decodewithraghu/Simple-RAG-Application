@@ -31,6 +31,22 @@ const Header = ({ uploadCount }) => {
         <h1>📚 RAG Application</h1>
         <p className="subtitle">Retrieval-Augmented Generation with Ollama</p>
         
+        {health && health.ollama_status === 'unavailable' && (
+          <div className="ollama-warning">
+            <div className="warning-icon">⚠️</div>
+            <div className="warning-content">
+              <strong>Ollama is not available!</strong>
+              <p>Please ensure Ollama is installed and running:</p>
+              <ul>
+                <li>Install from <a href="https://ollama.ai/download" target="_blank" rel="noopener noreferrer">ollama.ai/download</a></li>
+                <li>Windows: Ollama runs automatically as a service</li>
+                <li>macOS/Linux: Run <code>ollama serve</code> in terminal</li>
+                <li>Pull a model: <code>ollama pull llama2</code></li>
+              </ul>
+            </div>
+          </div>
+        )}
+        
         <div className="status-bar">
           {health && (
             <>

@@ -70,6 +70,10 @@ class OllamaClient:
             Generated response
         """
         try:
+            # Check if Ollama is available first
+            if not self.check_health():
+                return "⚠️ Ollama is not available. Please ensure Ollama is installed and running:\n\n1. Install Ollama from https://ollama.ai/\n2. Start Ollama service: 'ollama serve'\n3. Pull a model: 'ollama pull llama2'\n\nOnce Ollama is running, try your query again."
+            
             # Build the full prompt with context
             full_prompt = self._build_prompt(prompt, context)
             
@@ -92,7 +96,8 @@ class OllamaClient:
         
         except requests.exceptions.RequestException as e:
             logger.error(f"Error calling Ollama API: {str(e)}")
-            raise Exception(f"Failed to generate response: {str(e)}")
+            error_msg = f"⚠️ Ollama Error: {str(e)}\n\nPlease ensure:\n1. Ollama is running ('ollama serve')\n2. The model '{self.model}' is available ('ollama pull {self.model}')\n3. Ollama is accessible at {self.base_url}"
+            return error_msg
     
     def _build_prompt(self, query: str, context: List[str] = None) -> str:
         """Build prompt with context."""
