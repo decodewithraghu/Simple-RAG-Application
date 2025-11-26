@@ -47,10 +47,25 @@ fi
 
 cd "$BACKEND_DIR"
 
-# Check if virtual environment exists
-if [ ! -d "venv" ]; then
-    echo -e "${RED}❌ Virtual environment not found. Please run setup first.${NC}"
-    exit 1
+# Find Python executable
+if [ -f "venv/bin/python3" ]; then
+    PYTHON_BIN="$BACKEND_DIR/venv/bin/python3"
+elif [ -f "/Library/Frameworks/Python.framework/Versions/3.14/bin/python3.14" ]; then
+    PYTHON_BIN="/Library/Frameworks/Python.framework/Versions/3.14/bin/python3.14"
+else
+    PYTHON_BIN="python3"
+fi
+
+echo -e "${GREEN}Using Python: $PYTHON_BIN${NC}"
+
+# Check if required packages are installed
+if ! $PYTHON_BIN -c "import fastapi" 2>/dev/null; then
+    echo -e "${YELLOW}⚠️  Python dependencies not found. Installing...${NC}"
+    $PYTHON_BIN -m pip install -r requirements.txt
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}❌ Failed to install backend dependencies${NC}"
+        exit 1
+    fi
 fi
 
 # Clear port 8000
@@ -58,7 +73,7 @@ kill_port 8000
 
 # Start backend
 echo -e "${GREEN}✅ Starting FastAPI server on http://localhost:8000${NC}"
-/Library/Frameworks/Python.framework/Versions/3.14/bin/python3.14 main.py > /tmp/rag-backend.log 2>&1 &
+$PYTHON_BIN main.py > /tmp/rag-backend.log 2>&1 &
 BACKEND_PID=$!
 
 # Wait for backend to start
@@ -99,6 +114,23 @@ cd "$FRONTEND_DIR"
 if [ ! -d "node_modules" ]; then
     echo -e "${YELLOW}⚠️  node_modules not found. Installing dependencies...${NC}"
     npm install
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}❌ Failed to install frontend dependencies${NC}"
+        kill $BACKEND_PID 2>/dev/null || true
+        exit 1
+    fi
+fi
+
+# Verify react-scripts is available
+if ! [ -f "node_modules/.bin/react-scripts" ]; then
+    echo -e "${YELLOW}⚠️  react-scripts not found. Reinstalling dependencies...${NC}"
+    rm -rf node_modules package-lock.json
+    npm install
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}❌ Failed to install frontend dependencies${NC}"
+        kill $BACKEND_PID 2>/dev/null || true
+        exit 1
+    fi
 fi
 
 # Clear port 3000
