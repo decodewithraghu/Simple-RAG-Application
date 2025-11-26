@@ -1,16 +1,32 @@
 # RAG Application
 
-A complete Retrieval-Augmented Generation (RAG) application that allows you to upload documents, process them into embeddings, store them in a vector database, and query them using Ollama for intelligent responses.
+A complete Retrieval-Augmented Generation (RAG) application with Progressive Web App (PWA) capabilities that allows you to upload documents, organize them into collections, process them into embeddings, store them in a vector database, and query them using Ollama for intelligent responses.
 
 ## 🚀 Features
 
+### Core Features
 - **Document Upload**: Support for PDF and TXT files
+- **Collection Management**: Organize documents into collections/partitions for faster searches
 - **Automatic Chunking**: Intelligently splits documents into manageable chunks
 - **Vector Embeddings**: Uses sentence transformers to create embeddings
 - **Vector Database**: Stores embeddings in FAISS for efficient retrieval
 - **AI-Powered Queries**: Uses Ollama (llama2 or other models) to generate responses
-- **Modern UI**: Clean React-based frontend with drag-and-drop upload
+- **Source Tracking**: View which documents and chunks were used in answers
+- **Database Viewer**: Browse, view, and manage documents in the vector database
+
+### PWA Features
+- **Installable**: Install as a native app on desktop and mobile
+- **Offline Support**: Service worker caching for offline functionality
+- **Responsive Design**: Works seamlessly on all devices
+- **Install Prompt**: User-friendly installation banner
+- **Offline Indicator**: Shows when network is unavailable
+
+### UI Features
+- **Modern Interface**: Clean React-based frontend with drag-and-drop upload
+- **Collection Selector**: Choose or create collections when uploading/querying
 - **Real-time Status**: Shows system health and document statistics
+- **Tabbed Interface**: Switch between Query and Database views
+- **CRUD Operations**: Full create, read, update, delete for documents and collections
 
 ## 📋 Prerequisites
 
@@ -71,12 +87,36 @@ npm install
 
 ## 🚀 Running the Application
 
-### Start Backend Server
+### Quick Start (Recommended)
+
+The easiest way to start both backend and frontend:
 
 ```bash
-# In the backend directory with virtual environment activated
+# From the project root directory
+./start-all.sh
+```
+
+This script will:
+- ✅ Automatically detect and use the correct Python installation
+- ✅ Install missing dependencies (both backend and frontend)
+- ✅ Kill any processes using ports 8000 or 3000
+- ✅ Start the backend server
+- ✅ Start the frontend server
+- ✅ Open the application in your browser
+- ✅ Display process IDs and log locations
+
+To stop the application, press `Ctrl+C` in the terminal.
+
+### Manual Start
+
+#### Start Backend Server
+
+```bash
+# In the backend directory
 cd backend
-source venv/bin/activate  # Activate venv if not already active
+python3 main.py
+# or if using virtual environment
+source venv/bin/activate
 python main.py
 ```
 
@@ -84,7 +124,7 @@ The backend API will start at `http://localhost:8000`
 
 You can access the API documentation at `http://localhost:8000/docs`
 
-### Start Frontend Server
+#### Start Frontend Server
 
 ```bash
 # In the frontend directory (new terminal)
@@ -96,55 +136,107 @@ The frontend will start at `http://localhost:3000`
 
 ## 📖 Usage
 
-1. **Upload Documents**:
-   - Drag and drop a PDF or TXT file into the upload area
-   - Or click "Browse Files" to select a file
-   - Wait for the document to be processed and chunked
+### 1. Upload Documents
 
-2. **Query Documents**:
-   - Type your question in the query box
-   - Select the number of source chunks to use (3-10)
-   - Click "Ask Question"
-   - View the AI-generated answer and source references
+- Select or create a collection from the dropdown
+- Drag and drop a PDF or TXT file into the upload area
+- Or click "Browse Files" to select a file
+- Wait for the document to be processed and chunked
+- Files are organized by collection for faster searches
 
-3. **Monitor Status**:
-   - Check the header for Ollama availability
-   - See the number of uploaded documents and chunks
+### 2. Query Documents
+
+- Switch to the "🔍 Query Documents" tab
+- Select which collection to search (or use "default")
+- Type your question in the query box
+- Select the number of source chunks to use (3-10)
+- Click "Ask Question"
+- View the AI-generated answer with:
+  - Collection used
+  - Total chunks in database
+  - Chunks used in answer
+  - Similarity scores
+  - Source documents and text
+
+### 3. Manage Database
+
+- Switch to the "📊 View Database" tab
+- Browse all collections in the sidebar
+- View documents within each collection
+- Click "View" to see document details and all chunks
+- Delete individual documents or entire collections
+- Monitor database statistics
+
+### 4. Install as PWA
+
+- Click "Install" when the installation banner appears
+- App will be installed on your device
+- Launch from home screen/desktop like a native app
+- Works offline after installation
+
+### 5. Monitor Status
+
+- Check the header for:
+  - Ollama availability
+  - Number of uploaded documents
+  - Total chunks in database
 
 ## 🏗️ Project Structure
 
 ```
 Rag/
+├── start-all.sh            # Main startup script
+├── README.md
+├── PWA_GUIDE.md           # PWA implementation details
+├── IMPLEMENTATION_SUMMARY.md
 ├── backend/
 │   ├── main.py                 # FastAPI application
+│   ├── start.sh                # Backend startup script
 │   ├── requirements.txt        # Python dependencies
-│   ├── .env.example           # Environment variables template
+│   ├── .env                    # Environment variables
 │   ├── .gitignore
+│   ├── faiss_db/              # FAISS vector indices by collection
+│   │   ├── default/
+│   │   ├── medical/
+│   │   └── programming/
+│   ├── uploads/               # Uploaded files
 │   └── utils/
 │       ├── __init__.py
 │       ├── document_loader.py  # PDF/TXT loading
 │       ├── text_chunker.py     # Text chunking logic
 │       ├── embeddings.py       # Embedding generation & Ollama client
-│       └── vector_store.py     # ChromaDB integration
+│       └── vector_store.py     # FAISS integration with collections
 │
 └── frontend/
     ├── package.json
     ├── .env                    # Frontend environment variables
     ├── public/
-    │   └── index.html
+    │   ├── index.html
+    │   ├── manifest.json       # PWA manifest
+    │   ├── service-worker.js   # Service worker for offline
+    │   ├── logo192.png         # PWA icons
+    │   ├── logo512.png
+    │   └── favicon.ico
     └── src/
         ├── index.js
         ├── index.css
         ├── App.js              # Main application component
         ├── App.css
         ├── api.js              # API client
+        ├── serviceWorkerRegistration.js # PWA service worker
         └── components/
             ├── Header.js       # Header with status
             ├── Header.css
-            ├── FileUpload.js   # File upload component
+            ├── FileUpload.js   # File upload with collections
             ├── FileUpload.css
-            ├── QueryInterface.js # Query interface
-            └── QueryInterface.css
+            ├── QueryInterface.js # Query interface with collections
+            ├── QueryInterface.css
+            ├── DatabaseViewer.js # Database management UI
+            ├── DatabaseViewer.css
+            ├── InstallPWA.js   # PWA install prompt
+            ├── InstallPWA.css
+            ├── OfflineIndicator.js # Offline status
+            └── OfflineIndicator.css
 ```
 
 ## 🔧 Configuration
@@ -167,33 +259,65 @@ REACT_APP_API_URL=http://localhost:8000
 
 ## 🧪 API Endpoints
 
-### Health Check
-- `GET /health` - Check system health
-
-### Document Management
-- `POST /upload` - Upload a document
-- `DELETE /documents` - Delete all documents
+### Health & Stats
+- `GET /health` - Check system health and collection info
 - `GET /stats` - Get document statistics
+
+### Collections
+- `GET /collections` - List all collections with document counts
+- `GET /collections/{name}` - Get specific collection info
+- `DELETE /collections/{name}` - Delete a collection
+
+### Documents
+- `POST /upload?collection={name}` - Upload a document to a collection
+- `GET /collections/{name}/documents` - List documents in a collection
+- `GET /collections/{name}/documents/{id}` - Get document details
+- `DELETE /collections/{name}/documents/{id}` - Delete a specific document
+- `DELETE /documents?collection={name}` - Delete all documents in a collection
+
+### Chunks
+- `GET /collections/{name}/chunks?limit=100&offset=0` - List chunks with pagination
 
 ### Query
 - `POST /query` - Query the document database
+  ```json
+  {
+    "query": "your question",
+    "num_results": 5,
+    "collection": "default"
+  }
+  ```
 
 ## 🔍 How It Works
 
 1. **Document Upload**:
-   - User uploads a PDF/TXT file
+   - User selects a collection and uploads a PDF/TXT file
    - Backend extracts text from the document
    - Text is split into chunks (1000 chars with 200 char overlap)
    - Each chunk is converted to embeddings using sentence-transformers
-   - Embeddings are stored in FAISS vector index
+   - Embeddings are stored in collection-specific FAISS vector index
+   - Metadata includes document ID, filename, chunk index, and text
 
 2. **Querying**:
-   - User submits a question
+   - User selects a collection and submits a question
    - Question is converted to an embedding
-   - FAISS finds the most similar document chunks using L2 distance
-   - Retrieved chunks are sent to Ollama as context
+   - FAISS searches only the selected collection's index
+   - Finds the most similar document chunks using L2 distance
+   - Retrieved chunks (with metadata) are sent to Ollama as context
    - Ollama generates an answer based on the context
-   - Answer and sources are returned to the user
+   - Answer, sources, similarity scores, and statistics are returned
+
+3. **Collection Partitioning**:
+   - Each collection has its own FAISS index
+   - Searches only within selected collection (faster and more accurate)
+   - Collections can be created on-the-fly during upload
+   - Allows organizing documents by topic, department, version, etc.
+
+4. **PWA Functionality**:
+   - Service worker caches static assets
+   - Offline access to previously loaded pages
+   - Install prompt for native app experience
+   - Background sync capabilities
 
 ## 🛡️ Technologies Used
 
@@ -205,38 +329,126 @@ REACT_APP_API_URL=http://localhost:8000
 - **Ollama** - Local LLM for answer generation
 
 ### Frontend
-- **React** - UI framework
+- **React 18** - UI framework
 - **Axios** - HTTP client
 - **React Dropzone** - File upload component
+- **Service Workers** - PWA offline support
+- **Web App Manifest** - PWA configuration
+
+## 💡 Advanced Features
+
+### Collection-Based Partitioning
+Organize documents into collections for:
+- **Faster searches**: Only search relevant collections
+- **Better organization**: Group by topic, department, or category
+- **Improved accuracy**: Reduce irrelevant results
+- **Scalability**: Performance stays constant as database grows
+
+### Database Management
+- View all documents and chunks in the database
+- Delete individual documents or entire collections
+- Browse document details and chunk content
+- Monitor collection statistics
+
+### PWA Capabilities
+- Install on any device (desktop, mobile, tablet)
+- Offline access to cached content
+- Native app experience
+- Automatic updates
+- See [PWA_GUIDE.md](PWA_GUIDE.md) for details
+
+## 🎯 Use Cases
+
+- **Knowledge Base**: Upload company documents, manuals, policies
+- **Research Assistant**: Query research papers and technical docs
+- **Customer Support**: Search through support documentation
+- **Personal Library**: Organize and query personal documents
+- **Multi-Department**: Separate collections per department
+- **Version Control**: Different collections for document versions
 
 ## 🚨 Troubleshooting
+
+### Application won't start
+- Run `./start-all.sh` from the project root
+- Check logs at `/tmp/rag-backend.log` and `/tmp/rag-frontend.log`
+- Ensure ports 8000 and 3000 are available
 
 ### Ollama not available
 - Make sure Ollama is running: `ollama serve`
 - Check if the model is pulled: `ollama list`
 - Pull the model if missing: `ollama pull llama2`
 
+### Dependencies missing
+- Backend: `pip install -r backend/requirements.txt`
+- Frontend: `cd frontend && npm install`
+- Or use `./start-all.sh` which installs automatically
+
 ### Backend errors
-- Ensure virtual environment is activated
-- Check all dependencies are installed
-- Verify .env file exists and is configured
+- Check Python version: `python3 --version` (requires 3.8+)
+- Verify .env file exists in backend directory
+- Check `/tmp/rag-backend.log` for detailed errors
 
 ### Frontend can't connect to backend
 - Ensure backend is running on port 8000
-- Check REACT_APP_API_URL in frontend/.env
-- Check CORS settings in backend/main.py
+- Check REACT_APP_API_URL in `frontend/.env`
+- Verify CORS settings in `backend/main.py`
 
 ### PDF upload fails
 - Check file size (default max 10MB)
 - Ensure PDF contains extractable text (not scanned images)
+- Verify sufficient disk space
+
+### Collection not showing documents
+- Ensure documents were uploaded to the correct collection
+- Refresh the database viewer
+- Check backend logs for errors
+
+### PWA not installing
+- Use HTTPS or localhost
+- Check if browser supports PWA (Chrome, Edge, Safari)
+- Clear browser cache and reload
+- Check browser console for manifest errors
 
 ## 📝 Notes
 
 - The application uses the `all-MiniLM-L6-v2` model for embeddings (automatically downloaded on first use)
-- FAISS indices are persisted in the `faiss_db` directory
+- FAISS indices are persisted in the `faiss_db/{collection_name}` directory
+- Each collection has its own index and metadata
 - Uploaded files are stored in the `uploads` directory
-- Both directories are created automatically
+- All directories are created automatically
 - FAISS provides very fast similarity search and is compatible with all platforms
+- Service worker caches static assets for offline access
+- PWA icons are generated automatically
+- Application can be installed on any device
+
+## 📚 Documentation
+
+- [PWA Implementation Guide](PWA_GUIDE.md) - Complete PWA features documentation
+- [Implementation Summary](IMPLEMENTATION_SUMMARY.md) - Collection system details
+- [API Documentation](http://localhost:8000/docs) - Interactive API docs (when backend is running)
+
+## 🚀 Quick Commands
+
+```bash
+# Start everything
+./start-all.sh
+
+# Stop everything (from start-all.sh terminal)
+Ctrl+C
+
+# View backend logs
+tail -f /tmp/rag-backend.log
+
+# View frontend logs
+tail -f /tmp/rag-frontend.log
+
+# Test backend API
+curl http://localhost:8000/health
+
+# Test Ollama
+ollama list
+ollama run llama2
+```
 
 ## 🤝 Contributing
 
