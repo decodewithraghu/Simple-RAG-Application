@@ -1,0 +1,5 @@
+<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" fill="#2196F3" rx="50"/>
+  <text x="50%" y="45%" dominant-baseline="middle" text-anchor="middle" font-size="180" fill="white" font-family="Arial, sans-serif" font-weight="bold">RAG</text>
+  <text x="50%" y="65%" dominant-baseline="middle" text-anchor="middle" font-size="40" fill="#E3F2FD" font-family="Arial, sans-serif">Document Query</text>
+</svg>

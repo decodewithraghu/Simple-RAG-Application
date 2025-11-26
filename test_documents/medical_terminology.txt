@@ -1,0 +1,31 @@
+Medical Terminology Guide
+
+Basic Medical Terms:
+1. Diagnosis - The identification of the nature of an illness or other problem
+2. Prognosis - A forecast of the probable outcome of a disease
+3. Symptom - A physical or mental feature indicating a condition or disease
+4. Syndrome - A group of symptoms that consistently occur together
+5. Acute - Having a rapid onset, severe symptoms, and a short course
+6. Chronic - Persisting for a long time or constantly recurring
+
+Common Medical Abbreviations:
+- BP: Blood Pressure
+- HR: Heart Rate
+- CBC: Complete Blood Count
+- MRI: Magnetic Resonance Imaging
+- CT: Computed Tomography
+- ECG/EKG: Electrocardiogram
+
+Body Systems:
+- Cardiovascular System: Heart and blood vessels
+- Respiratory System: Lungs and airways
+- Digestive System: Stomach, intestines, and related organs
+- Nervous System: Brain, spinal cord, and nerves
+- Musculoskeletal System: Bones, muscles, and joints
+
+Medical Specialties:
+- Cardiology: Study of the heart
+- Dermatology: Study of the skin
+- Neurology: Study of the nervous system
+- Orthopedics: Study of bones and joints
+- Pediatrics: Medical care of children

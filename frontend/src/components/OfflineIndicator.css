@@ -1,0 +1,56 @@
+.offline-indicator {
+  position: fixed;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateX(-50%) translateY(-100%);
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.offline-content {
+  background: #ff9800;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.offline-icon {
+  font-size: 20px;
+}
+
+.offline-text {
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .offline-indicator {
+    top: 60px;
+    left: 10px;
+    right: 10px;
+    transform: none;
+  }
+
+  .offline-content {
+    font-size: 12px;
+    padding: 10px 16px;
+  }
+
+  .offline-text {
+    white-space: normal;
+  }
+}

@@ -1,0 +1,35 @@
+Programming Concepts Guide
+
+Object-Oriented Programming (OOP):
+1. Encapsulation - Bundling data and methods that operate on that data
+2. Inheritance - Creating new classes from existing ones
+3. Polymorphism - Objects can take many forms and respond differently
+4. Abstraction - Hiding complex implementation details
+
+Data Structures:
+- Array: Sequential collection of elements
+- Linked List: Chain of nodes with pointers
+- Stack: Last-In-First-Out (LIFO) structure
+- Queue: First-In-First-Out (FIFO) structure
+- Tree: Hierarchical structure with nodes
+- Graph: Network of connected nodes
+- Hash Table: Key-value pair storage
+
+Algorithms:
+- Sorting: Bubble sort, Quick sort, Merge sort
+- Searching: Binary search, Linear search
+- Graph algorithms: Dijkstra's, BFS, DFS
+- Dynamic programming: Memoization, tabulation
+
+Design Patterns:
+- Singleton: Ensures only one instance of a class
+- Factory: Creates objects without specifying exact class
+- Observer: Notifies multiple objects about state changes
+- Strategy: Encapsulates algorithms for interchangeability
+- Decorator: Adds behavior to objects dynamically
+
+Programming Paradigms:
+- Imperative: Step-by-step instructions
+- Declarative: What to do, not how
+- Functional: Functions as first-class citizens
+- Procedural: Procedure-based programming
